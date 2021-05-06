@@ -2,7 +2,7 @@
 <project basedir="." name="Seco">
 	<description>Seco Build File</description>
 
-	<property name="version" value="0.7.0" />
+	<property name="version" value="0.9.0" />
 	<property name="jar-name" value="seco.jar"/>
 	
 	<!-- The directory containing library jar files -->
@@ -26,6 +26,17 @@
 		<pathelement path="${java.class.path}" />
 	</path>
 
+
+	<macrodef name="include-lang-dist">
+		<attribute name="language"/>
+		<sequential>
+			<echo>Building language @{language}</echo>
+			<ant dir="../languages/@{language}" target="dist"/>
+			<copy todir="${build}/seco/lib">
+				<fileset dir="../languages/@{language}/dist"/>
+			</copy>
+		</sequential>
+	</macrodef>
 
 	<target name="timestamp">
 		<!-- Create the time stamp -->
@@ -77,7 +88,7 @@
 				<include name="lib/**" />
 				<include name="Readme.txt" />
 				<include name="LicensingInformation" />
-                <include name="BERKELEYDB_LICENSE.txt" />
+        <include name="BERKELEYDB_LICENSE.txt" />
 			</fileset>
 		</copy>
 		<exec executable="cp">
@@ -88,6 +99,13 @@
             <include name="examples/**"/>
         </fileset>
     </copy>        
+    <include-lang-dist language="groovy"/>
+    <include-lang-dist language="javascript"/>
+    <include-lang-dist language="prolog"/>
+    <include-lang-dist language="python"/>
+		<include-lang-dist language="ruby"/>
+		<include-lang-dist language="symja"/>
+		<include-lang-dist language="scala"/>
 	</target>
 
 	<target name="dist-zip" depends="dist-prepare" description="Build Windows distribution">
